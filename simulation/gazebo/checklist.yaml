@@ -1,0 +1,36 @@
+schema_version: 1
+project: Vayuputra AirMouse
+runtime:
+  image: px4io/px4-sitl-gazebo-ros2@sha256:f16b9968853ecf37a93301c54fbaaa7363b4d0c50fd7c8a4d8077a8c93f683b1
+  ros_distribution: jazzy
+  gazebo: harmonic
+  launch_script: simulation/gazebo/vayuputra-sim.sh
+checklist:
+  - id: model-and-physics
+    status: implemented-structural-only
+    details: "SDF sensor quad with mass 1.5 kg, body dimensions 0.24 x 0.18 x 0.07 m, inertia values and collision geometry."
+    verification: "python3 simulation/gazebo/check_assets.py; then validate with Gazebo and PX4 plugins."
+  - id: lidar
+    status: implemented-structural-only
+    details: "2D GPU LiDAR at 10 Hz, 720 samples, 0.15-12 m range."
+    verification: "Inspect Gazebo Transport topic and bridge to ROS 2."
+  - id: depth-camera
+    status: implemented-structural-only
+    details: "RGB-D camera at 15 Hz, 640x480, 0.1-10 m clipping."
+    verification: "Inspect image/depth topics and frame IDs."
+  - id: imu
+    status: implemented-structural-only
+    details: "Simulated IMU at 250 Hz."
+    verification: "Check sensor topic rate and frame in running Gazebo."
+  - id: indoor-world
+    status: implemented-structural-only
+    details: "12 x 10 m enclosed room, 3 m walls, floor and obstacle."
+    verification: "Load world in Gazebo and inspect collision/spawn geometry."
+  - id: sitl-communication
+    status: partial
+    details: "Pinned Docker launch helper and ROS topic discovery checks."
+    verification: "Confirm live topic data and QGroundControl heartbeat on each host."
+  - id: takeoff-hover-land
+    status: pending
+    details: "Stock model manual takeoff was observed; custom model automated acceptance test is not yet validated."
+    verification: "Integrate PX4 motor/actuator plugins, then automate bounded takeoff, hover, landing and landed/disarmed assertions."
